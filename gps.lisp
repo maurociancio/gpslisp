@@ -23,8 +23,13 @@
 	)
 )
 
+;agrega el nodo nodo al path si no existe en el camino.
+;si existe devuelve el mismo camino
 (defun agregar_nodo_si_no_existe (path nodo)
-	(append path (list nodo))
+	(if (contiene nodo path)
+		path
+		(append path (list nodo))
+	)
 )
 
 ;path (nodo1 nodo2 nodo3 ...)
@@ -73,3 +78,7 @@
 (test 'contiene1 (contiene '1 '(1 2 3)) t)
 (test 'contiene2 (contiene '1 '(9 8 1 2 3)) t)
 (test 'contiene3 (contiene '1 '(9 8 2 2 3)) nil)
+
+(test 'agregar_nodo1 (agregar_nodo_si_no_existe '(1 2 3) '4) '(1 2 3 4))
+(test 'agregar_nodo2 (agregar_nodo_si_no_existe '(1 2 3) '3) '(1 2 3))
+(test 'agregar_nodo2 (agregar_nodo_si_no_existe '(1 3 2) '3) '(1 3 2))
