@@ -63,7 +63,7 @@
 )
 
 (defun find_path (source target adyacencias)
-	(do_find_path source target adyacencias (list source))
+	(do_find_path source target adyacencias (list (list source)))
 )
 
 (defun do_find_path (source target adyacencias path)
