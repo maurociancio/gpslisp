@@ -66,7 +66,7 @@
 	(do_find_path source target adyacencias (list source))
 )
 
-(defun do_find_path (source target adyacencias &optional(path '()))
+(defun do_find_path (source target adyacencias path)
 	(if (or (null source) (null target) (null adyacencias))
 		nil
 		t
