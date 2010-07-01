@@ -124,6 +124,7 @@
 
 (test 'expandir10 (expandir_caminos '((1 2)) '(1 3 5) ) '((1 2 3) (1 2 5)))
 (test 'expandir11 (expandir_caminos '((1 2) (1)) '(1 3 5) ) '((1 2 3) (1 2 5) (1 3) (1 5)))
+(test 'expandir12 (expandir_caminos '((1 2)) '() ) '((1 2)))
 
 (test 'contiene1 (contiene '1 '(1 2 3)) t)
 (test 'contiene2 (contiene '1 '(9 8 1 2 3)) t)
