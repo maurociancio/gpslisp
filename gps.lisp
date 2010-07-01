@@ -154,4 +154,5 @@
 (test 'elim_rep3 (eliminar_repetidos nil) nil)
 (test 'elim_rep4 (eliminar_repetidos '(1 2 3 2 2)) '(1 3 2))
 
-(test 'find_caminos (find_path '1 '5 '((1 (5)) (5 (1)))) '((1 5)))
+(test 'find_caminos1 (find_path '1 '5 '((1 (5)) (5 (1)))) '((1 5)))
+(test 'find_caminos2 (find_path '1 '3 '((1 (2 3)) (2 (1 3) (3 (1 2))))) '((1 2 3)(1 3)))
