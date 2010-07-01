@@ -73,7 +73,10 @@
 )
 
 (defun expandir_caminos (paths adyacencias)
-	(eliminar_nils (expandir_caminos_rep paths adyacencias))
+	(if (null (eliminar_nils (expandir_caminos_rep paths adyacencias)))
+		paths
+		(eliminar_nils (expandir_caminos_rep paths adyacencias))
+	)
 )
 
 ;paths = ( (1 2 3 ) (1 3 4) ....)
@@ -93,7 +96,10 @@
 (defun do_find_path (source target adyacencias path)
 	(if (or (null source) (null target) (null adyacencias))
 		nil
-		t
+		(if (equal path (expandir_caminos path adyacencias))
+			path
+			(do_find_path source target adyacencias (expandir_caminos path adyacencias))
+		)
 	)
 )
 
@@ -128,6 +134,9 @@
 (test 'expandir11 (expandir_caminos '((1 2) (1)) '((1 (3 5)) (2 (3 5))) ) '((1 2 3) (1 2 5) (1 3) (1 5)))
 (test 'expandir12 (expandir_caminos '((1 2)) '() ) '((1 2)))
 
+(test 'expandir13 (expandir_caminos '((1 2)) '( (2 (3)) ) ) '((1 2 3)))
+(test 'expandir14 (expandir_caminos '((1 5)) '((1 (5)) (5 (1))) ) '((1 5)))
+
 (test 'contiene1 (contiene '1 '(1 2 3)) t)
 (test 'contiene2 (contiene '1 '(9 8 1 2 3)) t)
 (test 'contiene3 (contiene '1 '(9 8 2 2 3)) nil)
@@ -144,3 +153,5 @@
 (test 'elim_rep2 (eliminar_repetidos '(1 3 2 2)) '(1 3 2))
 (test 'elim_rep3 (eliminar_repetidos nil) nil)
 (test 'elim_rep4 (eliminar_repetidos '(1 2 3 2 2)) '(1 3 2))
+
+(test 'find_caminos (find_path '1 '5 '((1 (5)) (5 (1)))) '((1 5)))
