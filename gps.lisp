@@ -10,6 +10,10 @@
 	)
 )
 
+(defun agregar_nodo_si_no_existe (path nodo)
+	(append path (list nodo))
+)
+
 ;path (nodo1 nodo2 nodo3 ...)
 ;adyacencias (nodox nodoy ...)
 ;crea tantos caminos como adyacencias no incluidas en el camino actual
@@ -20,7 +24,7 @@
 (defun expandir_camino (path adyacencias)
 	(if (null adyacencias)
 		(list path)
-		(mapcar (lambda (e) (append path (list e))) adyacencias)
+		(mapcar (lambda (e) (agregar_nodo_si_no_existe path e)) adyacencias)
 	)
 )
 
