@@ -77,11 +77,12 @@
 )
 
 ;paths = ( (1 2 3 ) (1 3 4) ....)
-;adyacencias = ( 3 4 5 )
+;adyacencias = ( (1 (3 4 5 )) ( 2 ( 3 4 5)))
 (defun expandir_caminos_rep (paths adyacencias)
 	(if (null paths)
 		nil
-		(append (expandir_camino (car paths) adyacencias) (expandir_caminos (cdr paths) adyacencias))
+		(append (expandir_camino (car paths) (adyacencias_de (car (last (car paths))) adyacencias))
+			(expandir_caminos (cdr paths) adyacencias))
 	)
 )
 
@@ -123,9 +124,8 @@
 
 (test 'expandir8 (expandir_camino '(1 2) '(1 2 5) ) '((1 2 5)))
 (test 'expandir9 (expandir_camino '(1 2) '(1 3 5) ) '((1 2 3) (1 2 5)))
-
-(test 'expandir10 (expandir_caminos '((1 2)) '(1 3 5) ) '((1 2 3) (1 2 5)))
-(test 'expandir11 (expandir_caminos '((1 2) (1)) '(1 3 5) ) '((1 2 3) (1 2 5) (1 3) (1 5)))
+(test 'expandir10 (expandir_caminos '((1 2)) '((1 (3 5)) (2 (3 5))) ) '((1 2 3) (1 2 5)))
+(test 'expandir11 (expandir_caminos '((1 2) (1)) '((1 (3 5)) (2 (3 5))) ) '((1 2 3) (1 2 5) (1 3) (1 5)))
 (test 'expandir12 (expandir_caminos '((1 2)) '() ) '((1 2)))
 
 (test 'contiene1 (contiene '1 '(1 2 3)) t)
