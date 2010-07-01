@@ -62,8 +62,8 @@
 	(eliminar_repetidos (expandir_camino_rep path adyacencias))
 )
 
-(defun find_path (source target esquinas adyacencias &optional(path '()))
-	(if (or (null source) (null target) (null esquinas) (null adyacencias))
+(defun find_path (source target adyacencias &optional(path '()))
+	(if (or (null source) (null target) (null adyacencias))
 		nil
 		t
 	)
@@ -79,7 +79,7 @@
 )
 ;=============================
 
-(test 'params (find_path nil nil nil nil) nil)
+(test 'params (find_path nil nil nil) nil)
 
 ;adyacencias
 (test 'ady1 (adyacencias_de 'a '((a (b c))) ) '(b c))
