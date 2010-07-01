@@ -84,4 +84,4 @@
 
 (test 'agregar_nodo1 (agregar_nodo_si_no_existe '(1 2 3) '4) '(1 2 3 4))
 (test 'agregar_nodo2 (agregar_nodo_si_no_existe '(1 2 3) '3) '(1 2 3))
-(test 'agregar_nodo2 (agregar_nodo_si_no_existe '(1 3 2) '3) '(1 3 2))
+(test 'agregar_nodo3 (agregar_nodo_si_no_existe '(1 3 2) '3) '(1 3 2))
