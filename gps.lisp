@@ -11,6 +11,16 @@
 	)
 )
 
+(defun eliminar_repetidos (l)
+	(if (null l)
+		nil
+		(if (contiene (car l) (cdr l))
+			(eliminar_repetidos (cdr l))
+			(cons (car l) (eliminar_repetidos (cdr l)))
+		)
+	)
+)
+
 ;adyacencias
 ;((nodo1 (nodo2 nodo3)) (nodo2 (nodo1) ...))
 (defun adyacencias_de (nodo adyacencias)
@@ -85,3 +95,8 @@
 (test 'agregar_nodo1 (agregar_nodo_si_no_existe '(1 2 3) '4) '(1 2 3 4))
 (test 'agregar_nodo2 (agregar_nodo_si_no_existe '(1 2 3) '3) '(1 2 3))
 (test 'agregar_nodo3 (agregar_nodo_si_no_existe '(1 3 2) '3) '(1 3 2))
+
+(test 'elim_rep1 (eliminar_repetidos '(1 3 2)) '(1 3 2))
+(test 'elim_rep2 (eliminar_repetidos '(1 3 2 2)) '(1 3 2))
+(test 'elim_rep3 (eliminar_repetidos nil) nil)
+(test 'elim_rep4 (eliminar_repetidos '(1 2 3 2 2)) '(1 3 2))
