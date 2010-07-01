@@ -45,6 +45,7 @@
 ;path (nodo1 nodo2 nodo3 ...)
 ;adyacencias (nodox nodoy ...)
 ;crea tantos caminos como adyacencias no incluidas en el camino actual
+;devuelve con duplicados
 ;ejemplo
 ;path (1)
 ;adyacencias (2 3)
