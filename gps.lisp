@@ -74,6 +74,9 @@
 (test 'expandir2 (expandir_camino '(1 4) '(2 3) ) '((1 4 2) (1 4 3)))
 (test 'expandir3 (expandir_camino '(1 4) nil) '((1 4)))
 (test 'expandir4 (expandir_camino '(1) '(2 3 5) ) '((1 2) (1 3) (1 5)))
+(test 'expandir5 (expandir_camino '(1) '(1 3 5) ) '((1) (1 3) (1 5)))
+(test 'expandir6 (expandir_camino '(1 2) '(1 3 5) ) '((1 2) (1 2 3) (1 2 5)))
+(test 'expandir7 (expandir_camino '(1 2) '(1 2 5) ) '((1 2) (1 2) (1 2 5)))
 
 (test 'contiene1 (contiene '1 '(1 2 3)) t)
 (test 'contiene2 (contiene '1 '(9 8 1 2 3)) t)
