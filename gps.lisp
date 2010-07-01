@@ -73,9 +73,13 @@
 )
 
 (defun expandir_caminos (paths adyacencias)
-	(if (null (eliminar_nils (expandir_caminos_rep paths adyacencias)))
+	(do_expandir_caminos paths adyacencias (eliminar_nils (expandir_caminos_rep paths adyacencias)))
+)
+
+(defun do_expandir_caminos (paths adyacencias newpaths)
+	(if (null newpaths)
 		paths
-		(eliminar_nils (expandir_caminos_rep paths adyacencias))
+		newpaths
 	)
 )
 
@@ -96,10 +100,14 @@
 (defun do_find_path (source target adyacencias path)
 	(if (or (null source) (null target) (null adyacencias))
 		nil
-		(if (equal path (expandir_caminos path adyacencias))
-			path
-			(do_find_path source target adyacencias (expandir_caminos path adyacencias))
-		)
+		(do_find source target adyacencias path (expandir_caminos path adyacencias))
+	)
+)
+
+(defun do_find (source target adyacencias path new_path)
+	(if (equal path new_path)
+		path
+		(do_find_path source target adyacencias new_path)
 	)
 )
 
