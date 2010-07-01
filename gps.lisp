@@ -1,3 +1,10 @@
+(defun find_path (source target esquinas adyacencias &optional(path '()))
+	(if (or (null source) (null target) (null esquinas) (null adyacencias))
+		nil
+		t
+	)
+)
+
 ;testing function
 ;=============================
 (defun test (name got expected)
@@ -7,3 +14,5 @@
 	)
 )
 ;=============================
+
+(test 'params (find_path nil nil nil nil) nil)
