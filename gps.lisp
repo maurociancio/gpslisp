@@ -1,3 +1,16 @@
+;e elemento
+;l lista
+;retorna si e existe en l
+(defun contiene (e l)
+	(if (null l)
+		nil
+		(if (eq e (car l))
+			t
+			(contiene e (cdr l))
+		)
+	)
+)
+
 ;adyacencias
 ;((nodo1 (nodo2 nodo3)) (nodo2 (nodo1) ...))
 (defun adyacencias_de (nodo adyacencias)
@@ -56,3 +69,7 @@
 (test 'expandir2 (expandir_camino '(1 4) '(2 3) ) '((1 4 2) (1 4 3)))
 (test 'expandir3 (expandir_camino '(1 4) nil) '((1 4)))
 (test 'expandir4 (expandir_camino '(1) '(2 3 5) ) '((1 2) (1 3) (1 5)))
+
+(test 'contiene1 (contiene '1 '(1 2 3)) t)
+(test 'contiene2 (contiene '1 '(9 8 1 2 3)) t)
+(test 'contiene3 (contiene '1 '(9 8 2 2 3)) nil)
