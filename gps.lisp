@@ -10,6 +10,20 @@
 	)
 )
 
+;path (nodo1 nodo2 nodo3 ...)
+;adyacencias (nodox nodoy ...)
+;crea tantos caminos como adyacencias no incluidas en el camino actual
+;ejemplo
+;path (1)
+;adyacencias (2 3)
+;devuelve ((1 2) (1 3))
+(defun expandir_camino (path adyacencias)
+	(if (null adyacencias)
+		(list path)
+		(mapcar (lambda (e) (append path (list e))) adyacencias)
+	)
+)
+
 (defun find_path (source target esquinas adyacencias &optional(path '()))
 	(if (or (null source) (null target) (null esquinas) (null adyacencias))
 		nil
@@ -33,3 +47,8 @@
 (test 'ady1 (adyacencias_de 'a '((a (b c))) ) '(b c))
 (test 'ady2 (adyacencias_de 'a '((d (b c))) ) nil)
 (test 'ady3 (adyacencias_de 'a '((b (a c)) (a (b c))) ) '(b c))
+
+(test 'expandir1 (expandir_camino '(1) '(2 3) ) '((1 2) (1 3)))
+(test 'expandir2 (expandir_camino '(1 4) '(2 3) ) '((1 4 2) (1 4 3)))
+(test 'expandir3 (expandir_camino '(1 4) nil) '((1 4)))
+(test 'expandir4 (expandir_camino '(1) '(2 3 5) ) '((1 2) (1 3) (1 5)))
