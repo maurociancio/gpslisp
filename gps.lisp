@@ -45,13 +45,13 @@
 
 ;agrega el nodo nodo al path si no existe en el camino.
 ;si existe devuelve nil
-(defun agregar_nodo_si_no_existe (path nodo)
+(defun add_nodo_a_path (path nodo)
 	(if (contiene nodo path)
 		nil
 		(append path (list nodo))
 	)
 )
-;trace agregar_nodo_si_no_existe)
+;trace add_nodo_a_path)
 ;path (nodo1 nodo2 nodo3 ...)
 ;adyacencias (nodox nodoy ...)
 ;crea tantos caminos como adyacencias no incluidas en el camino actual
@@ -63,7 +63,7 @@
 (defun expandir_camino_rep (path adyacencias)
 	(if (null adyacencias)
 		(list path)
-		(mapcar (lambda (e) (agregar_nodo_si_no_existe path e)) adyacencias)
+		(mapcar (lambda (e) (add_nodo_a_path path e)) adyacencias)
 	)
 )
 
@@ -160,9 +160,9 @@
 (test 'contiene2 (contiene '1 '(9 8 1 2 3)) t)
 (test 'contiene3 (contiene '1 '(9 8 2 2 3)) nil)
 
-(test 'agregar_nodo1 (agregar_nodo_si_no_existe '(1 2 3) '4) '(1 2 3 4))
-(test 'agregar_nodo2 (agregar_nodo_si_no_existe '(1 2 3) '3) nil)
-(test 'agregar_nodo3 (agregar_nodo_si_no_existe '(1 3 2) '3) nil)
+(test 'agregar_nodo1 (add_nodo_a_path '(1 2 3) '4) '(1 2 3 4))
+(test 'agregar_nodo2 (add_nodo_a_path '(1 2 3) '3) nil)
+(test 'agregar_nodo3 (add_nodo_a_path '(1 3 2) '3) nil)
 
 (test 'elim_nils (eliminar_nils '(1 3 2 nil)) '(1 3 2))
 (test 'elim_nils2 (eliminar_nils '(1 3 2 nil)) '(1 3 2))
