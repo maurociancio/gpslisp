@@ -4,7 +4,7 @@
 (defun contiene (e l)
 	(if (null l)
 		nil
-		(if (eq e (car l))
+		(if (equal e (car l))
 			t
 			(contiene e (cdr l))
 		)
@@ -51,7 +51,7 @@
 		(append path (list nodo))
 	)
 )
-
+;trace agregar_nodo_si_no_existe)
 ;path (nodo1 nodo2 nodo3 ...)
 ;adyacencias (nodox nodoy ...)
 ;crea tantos caminos como adyacencias no incluidas en el camino actual
@@ -75,6 +75,7 @@
 (defun expandir_caminos (paths adyacencias)
 	(do_expandir_caminos paths adyacencias (eliminar_nils (expandir_caminos_rep paths adyacencias)))
 )
+;trace expandir_caminos)
 
 (defun do_expandir_caminos (paths adyacencias newpaths)
 	(if (null newpaths)
@@ -82,6 +83,7 @@
 		newpaths
 	)
 )
+;trace do_expandir_caminos)
 
 ;paths = ( (1 2 3 ) (1 3 4) ....)
 ;adyacencias = ( (1 (3 4 5 )) ( 2 ( 3 4 5)))
@@ -92,6 +94,10 @@
 			(expandir_caminos (cdr paths) adyacencias))
 	)
 )
+;trace expandir_caminos_rep)
+;trace expandir_camino)
+;trace expandir_caminos)
+;trace adyacencias_de)
 
 (defun find_path (source target adyacencias)
 	(do_find_path source target adyacencias (list (list source)))
@@ -120,13 +126,17 @@
 	)
 )
 ;=============================
-
+(EXPANDIR_CAMINOS_REP '((1 2 3) (1 3 2)) '((1 (2 3)) (2 (1 3)) (3 (1 2))))
 (test 'params (find_path nil nil nil) nil)
 
 ;adyacencias
 (test 'ady1 (adyacencias_de 'a '((a (b c))) ) '(b c))
 (test 'ady2 (adyacencias_de 'a '((d (b c))) ) nil)
 (test 'ady3 (adyacencias_de 'a '((b (a c)) (a (b c))) ) '(b c))
+
+;(test 'expandir0 (expandir_caminos_rep '((1 3)) '((1 (2 3)) (2 (1 3)) (3 (1 2)))) '((1 3 2)))
+
+(test 'repetidos (eliminar_repetidos '((1 2 3) (1 2 3) (1 3 2) (1 3 2))) '((1 2 3)(1 3 2)))
 
 (test 'expandir1 (expandir_camino_rep '(1) '(2 3) ) '((1 2) (1 3)))
 (test 'expandir2 (expandir_camino_rep '(1 4) '(2 3) ) '((1 4 2) (1 4 3)))
@@ -144,6 +154,7 @@
 
 (test 'expandir13 (expandir_caminos '((1 2)) '( (2 (3)) ) ) '((1 2 3)))
 (test 'expandir14 (expandir_caminos '((1 5)) '((1 (5)) (5 (1))) ) '((1 5)))
+(test 'expandir15 (expandir_caminos '((1 2) (1 3)) '((1 (2 3)) (2 (1 3)) (3 (1 2))) ) '((1 2 3)(1 3 2)))
 
 (test 'contiene1 (contiene '1 '(1 2 3)) t)
 (test 'contiene2 (contiene '1 '(9 8 1 2 3)) t)
@@ -162,5 +173,13 @@
 (test 'elim_rep3 (eliminar_repetidos nil) nil)
 (test 'elim_rep4 (eliminar_repetidos '(1 2 3 2 2)) '(1 3 2))
 
+;1 - 5
 (test 'find_caminos1 (find_path '1 '5 '((1 (5)) (5 (1)))) '((1 5)))
-(test 'find_caminos2 (find_path '1 '3 '((1 (2 3)) (2 (1 3) (3 (1 2))))) '((1 2 3)(1 3)))
+;1 - 2
+;|-3-|
+;(;trace do_find_path)
+;(;trace do_find)
+;(;trace expandir_caminos)
+;(test 'expcam1 (expandir_caminos '((1 2 3) (1 3 2)) '((1 (2 3)) (2 (1 3)) (3 (1 2)))) '((1 2 3) (1 3 2)))
+;(exit)
+;(test 'find_caminos2 (find_path '1 '3 '((1 (2 3)) (2 (1 3)) (3 (1 2)))) '((1 2 3)(1 3 2)))
