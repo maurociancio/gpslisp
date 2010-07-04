@@ -27,16 +27,6 @@
 	)
 )
 
-(defun eliminar_nils (l)
-	(if (null l)
-		nil
-		(if (null (car l))
-			(eliminar_nils (cdr l))
-			(cons (car l) (eliminar_nils (cdr l)))
-		)
-	)
-)
-
 ;====================================================================
 ;adyacencias
 ;====================================================================
@@ -57,7 +47,7 @@
 ;si existe devuelve nil
 (defun add_nodo_a_path (path nodo)
 	(if (contiene nodo path)
-		nil
+		path
 		(append path (list nodo))
 	)
 )
@@ -83,7 +73,7 @@
 
 ;idem anterior pero sacando repetidos
 (defun expandir_camino (path adyacencias)
-	(eliminar_nils (expandir_camino_rep path adyacencias))
+	(eliminar_repetidos (expandir_camino_rep path adyacencias))
 )
 
 ;====================================================================
@@ -91,7 +81,7 @@
 ;====================================================================
 
 (defun expandir_caminos (paths adyacencias)
-	(do_expandir_caminos paths adyacencias (eliminar_nils (expandir_caminos_rep paths adyacencias)))
+	(do_expandir_caminos paths adyacencias (expandir_caminos_rep paths adyacencias))
 )
 
 (defun do_expandir_caminos (paths adyacencias newpaths)
@@ -115,19 +105,31 @@
 ;busqueda de los caminos
 ;====================================================================
 
+;busca los caminos entre source y target
+;source: nodo origen
+;target: nodo destino
+;adyacencias: lista de adyacencias
 (defun find_path (source target adyacencias)
 	(do_find_path source target adyacencias (list (list source)))
 )
 
+;busca los caminos entre source y target
+;path es el listado de caminos que recorrio ( (1 2) (1 3) ... )
+;adyacencias: lista de adyacencias
+;
+;intenta expandir la lista de caminos en base a las adyacencias
+;si no hay mas posibles caminos, termina la ejecucion
 (defun do_find_path (source target adyacencias path)
 	(if (or (null source) (null target) (null adyacencias))
 		nil
-		(do_find source target adyacencias path (expandir_caminos path adyacencias))
+		(seguir_buscando_si_hay_caminos source target adyacencias path (expandir_caminos path adyacencias))
 	)
 )
 
-(defun do_find (source target adyacencias path new_path)
-	(if (equal path new_path)
+;sigue buscando caminos si entre path y new path son distintos
+;new path es la expansion de los caminos segun las adyacencias actuales
+(defun seguir_buscando_si_hay_caminos (source target adyacencias path new_path)
+	(if (equal path (eliminar_repetidos new_path))
 		path
 		(do_find_path source target adyacencias new_path)
 	)
@@ -137,22 +139,24 @@
 ;=============================
 (defun test (name got expected)
 	(if (equal expected got)
-		t;(progn (print '==ok==) (print name)
+		;t
+		(progn (print '==ok==) (print name))
 		(progn (print '==error==) (print name) (print 'expected) (print expected) (print 'got) (print got))
 	)
 )
 ;=============================
 ;===traces===
-;(trace add_nodo_a_path)
-;(trace expandir_caminos)
-;(trace do_expandir_caminos)
-;(trace expandir_caminos_rep)
-;(trace expandir_camino)
-;(trace expandir_caminos)
-;(trace adyacencias_de)
-;(trace do_find_path)
-;(trace do_find)
-;(trace expandir_caminos)
+(defun do_trace ()
+	(trace add_nodo_a_path)
+	(trace do_expandir_caminos)
+	(trace expandir_caminos_rep)
+	(trace expandir_camino)
+	(trace expandir_caminos)
+	(trace adyacencias_de)
+	(trace do_find_path)
+	(trace seguir_buscando_si_hay_caminos)
+	(trace expandir_caminos)
+)
 
 (test 'params (find_path nil nil nil) nil)
 
@@ -161,8 +165,7 @@
 (test 'ady2 (adyacencias_de 'a '((d (b c))) ) nil)
 (test 'ady3 (adyacencias_de 'a '((b (a c)) (a (b c))) ) '(b c))
 
-;(test 'expandir0 (expandir_caminos_rep '((1 3)) '((1 (2 3)) (2 (1 3)) (3 (1 2)))) '((1 3 2)))
-(EXPANDIR_CAMINOS_REP '((1 2 3) (1 3 2)) '((1 (2 3)) (2 (1 3)) (3 (1 2))))
+(test 'expandir0 (expandir_caminos_rep '((1 3)) '((1 (2 3)) (2 (1 3)) (3 (1 2)))) '((1 3)(1 3 2)))
 
 (test 'repetidos (eliminar_repetidos '((1 2 3) (1 2 3) (1 3 2) (1 3 2))) '((1 2 3)(1 3 2)))
 
@@ -170,32 +173,28 @@
 (test 'expandir2 (expandir_camino_rep '(1 4) '(2 3) ) '((1 4 2) (1 4 3)))
 (test 'expandir3 (expandir_camino_rep '(1 4) nil) '((1 4)))
 (test 'expandir4 (expandir_camino_rep '(1) '(2 3 5) ) '((1 2) (1 3) (1 5)))
-(test 'expandir5 (expandir_camino_rep '(1) '(1 3 5) ) '(nil (1 3) (1 5)))
-(test 'expandir6 (expandir_camino_rep '(1 2) '(1 3 5) ) '(nil (1 2 3) (1 2 5)))
-(test 'expandir7 (expandir_camino_rep '(1 2) '(1 2 5) ) '(nil nil (1 2 5)))
+(test 'expandir5 (expandir_camino_rep '(1) '(1 3 5) ) '((1) (1 3) (1 5)))
+(test 'expandir6 (expandir_camino_rep '(1 2) '(1 3 5) ) '((1 2) (1 2 3) (1 2 5)))
+(test 'expandir7 (expandir_camino_rep '(1 2) '(1 2 5) ) '((1 2)(1 2) (1 2 5)))
 
-(test 'expandir8 (expandir_camino '(1 2) '(1 2 5) ) '((1 2 5)))
-(test 'expandir9 (expandir_camino '(1 2) '(1 3 5) ) '((1 2 3) (1 2 5)))
+(test 'expandir8 (expandir_camino '(1 2) '(1 2 5) ) '((1 2)(1 2 5)))
+(test 'expandir9 (expandir_camino '(1 2) '(1 3 5) ) '((1 2)(1 2 3) (1 2 5)))
 (test 'expandir10 (expandir_caminos '((1 2)) '((1 (3 5)) (2 (3 5))) ) '((1 2 3) (1 2 5)))
 (test 'expandir11 (expandir_caminos '((1 2) (1)) '((1 (3 5)) (2 (3 5))) ) '((1 2 3) (1 2 5) (1 3) (1 5)))
 (test 'expandir12 (expandir_caminos '((1 2)) '() ) '((1 2)))
 
 (test 'expandir13 (expandir_caminos '((1 2)) '( (2 (3)) ) ) '((1 2 3)))
 (test 'expandir14 (expandir_caminos '((1 5)) '((1 (5)) (5 (1))) ) '((1 5)))
-(test 'expandir15 (expandir_caminos '((1 2) (1 3)) '((1 (2 3)) (2 (1 3)) (3 (1 2))) ) '((1 2 3)(1 3 2)))
+(test 'expandir15 (expandir_caminos '((1 2) (1 3)) '((1 (2 3)) (2 (1 3)) (3 (1 2))) ) '((1 2)(1 2 3)(1 3)(1 3 2)))
 
 (test 'contiene1 (contiene '1 '(1 2 3)) t)
 (test 'contiene2 (contiene '1 '(9 8 1 2 3)) t)
 (test 'contiene3 (contiene '1 '(9 8 2 2 3)) nil)
 
 (test 'agregar_nodo1 (add_nodo_a_path '(1 2 3) '4) '(1 2 3 4))
-(test 'agregar_nodo2 (add_nodo_a_path '(1 2 3) '3) nil)
-(test 'agregar_nodo3 (add_nodo_a_path '(1 3 2) '3) nil)
+(test 'agregar_nodo2 (add_nodo_a_path '(1 2 3) '3) '(1 2 3))
+(test 'agregar_nodo3 (add_nodo_a_path '(1 3 2) '3) '(1 3 2))
 
-(test 'elim_nils (eliminar_nils '(1 3 2 nil)) '(1 3 2))
-(test 'elim_nils2 (eliminar_nils '(1 3 2 nil)) '(1 3 2))
-(test 'elim_nils3 (eliminar_nils '(1 nil 3 2 nil)) '(1 3 2))
-(test 'elim_nils4 (eliminar_nils '(nil nil 1 nil 3 2 nil nil nil 1)) '(1 3 2 1))
 (test 'elim_rep1 (eliminar_repetidos '(1 3 2)) '(1 3 2))
 (test 'elim_rep2 (eliminar_repetidos '(1 3 2 2)) '(1 3 2))
 (test 'elim_rep3 (eliminar_repetidos nil) nil)
@@ -206,6 +205,5 @@
 
 ;1 - 2
 ;|-3-|
-;(test 'expcam1 (expandir_caminos '((1 2 3) (1 3 2)) '((1 (2 3)) (2 (1 3)) (3 (1 2)))) '((1 2 3) (1 3 2)))
-
-;(test 'find_caminos2 (find_path '1 '3 '((1 (2 3)) (2 (1 3)) (3 (1 2)))) '((1 2 3)(1 3 2)))
+(test 'expcam1 (expandir_caminos '((1 2 3) (1 3 2)) '((1 (2 3)) (2 (1 3)) (3 (1 2)))) '((1 2 3) (1 3 2)))
+(test 'find_caminos2 (find_path '1 '3 '((1 (2 3)) (2 (1 3)) (3 (1 2)))) '((1 2)(1 2 3)(1 3)(1 3 2)))
