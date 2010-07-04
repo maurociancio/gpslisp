@@ -105,33 +105,32 @@
 ;busqueda de los caminos
 ;====================================================================
 
-;busca los caminos entre source y target
+;busca todos los caminos alcanzables desde el source
 ;source: nodo origen
-;target: nodo destino
 ;adyacencias: lista de adyacencias
-(defun find_path (source target adyacencias)
-	(do_find_path source target adyacencias (list (list source)))
+(defun find_path (source adyacencias)
+	(do_find_path adyacencias (list (list source)))
 )
 
-;busca los caminos entre source y target
+;busca los caminos alcanzables desde el path
 ;path es el listado de caminos que recorrio ( (1 2) (1 3) ... )
 ;adyacencias: lista de adyacencias
 ;
 ;intenta expandir la lista de caminos en base a las adyacencias
 ;si no hay mas posibles caminos, termina la ejecucion
-(defun do_find_path (source target adyacencias path)
-	(if (or (null source) (null target) (null adyacencias))
+(defun do_find_path (adyacencias path)
+	(if (or (null adyacencias))
 		nil
-		(seguir_buscando_si_hay_caminos source target adyacencias path (expandir_caminos path adyacencias))
+		(seguir_buscando_si_hay_caminos adyacencias path (expandir_caminos path adyacencias))
 	)
 )
 
 ;sigue buscando caminos si entre path y new path son distintos
 ;new path es la expansion de los caminos segun las adyacencias actuales
-(defun seguir_buscando_si_hay_caminos (source target adyacencias path new_path)
+(defun seguir_buscando_si_hay_caminos (adyacencias path new_path)
 	(if (equal path (eliminar_repetidos new_path))
 		path
-		(do_find_path source target adyacencias new_path)
+		(do_find_path adyacencias new_path)
 	)
 )
 
@@ -174,7 +173,7 @@
 	(trace expandir_caminos)
 )
 
-(test 'params (find_path nil nil nil) nil)
+(test 'params (find_path nil nil) nil)
 
 ;adyacencias
 (test 'ady1 (adyacencias_de 'a '((a (b c))) ) '(b c))
@@ -217,13 +216,13 @@
 (test 'elim_rep4 (eliminar_repetidos '(1 2 3 2 2)) '(1 3 2))
 
 ;1 - 5
-(test 'find_caminos1 (find_path '1 '5 '((1 (5)) (5 (1)))) '((1 5)))
+(test 'find_caminos1 (find_path '1 '((1 (5)) (5 (1)))) '((1 5)))
 
 ;1 - 2
 ;|-3-|
 (test 'expcam1 (expandir_caminos '((1 2 3) (1 3 2)) '((1 (2 3)) (2 (1 3)) (3 (1 2)))) '((1 2 3) (1 3 2)))
-(test 'find_caminos2 (find_path '1 '3 '((1 (2 3)) (2 (1 3)) (3 (1 2)))) '((1 2)(1 2 3)(1 3)(1 3 2)))
+(test 'find_caminos2 (find_path '1 '((1 (2 3)) (2 (1 3)) (3 (1 2)))) '((1 2)(1 2 3)(1 3)(1 3 2)))
 (test 'find_caminos_filtrados
-	(filtrar_caminos '3 (find_path '1 '3 '((1 (2 3)) (2 (1 3)) (3 (1 2)))))
+	(filtrar_caminos '3 (find_path '1 '((1 (2 3)) (2 (1 3)) (3 (1 2)))))
 	'((1 2 3)(1 3))
 )
