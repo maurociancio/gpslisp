@@ -81,7 +81,7 @@
 ;====================================================================
 
 (defun expandir_caminos (paths adyacencias)
-	(do_expandir_caminos paths adyacencias (expandir_caminos_rep paths adyacencias))
+	(eliminar_repetidos (do_expandir_caminos paths adyacencias (expandir_caminos_rep paths adyacencias)))
 )
 
 (defun do_expandir_caminos (paths adyacencias newpaths)
@@ -128,7 +128,7 @@
 ;sigue buscando caminos si entre path y new path son distintos
 ;new path es la expansion de los caminos segun las adyacencias actuales
 (defun seguir_buscando_si_hay_caminos (adyacencias path new_path)
-	(if (equal path (eliminar_repetidos new_path))
+	(if (equal path new_path)
 		path
 		(do_find_path adyacencias new_path)
 	)
@@ -148,6 +148,11 @@
 			(filtrar_caminos target (cdr paths))
 		)
 	)
+)
+
+;busca todos los caminos entre origen y destino, en base a una lista de adyacencias
+(defun caminos_entre (source target adyacencias)
+	(filtrar_caminos target (find_path source adyacencias))
 )
 
 ;testing function
@@ -225,4 +230,9 @@
 (test 'find_caminos_filtrados
 	(filtrar_caminos '3 (find_path '1 '((1 (2 3)) (2 (1 3)) (3 (1 2)))))
 	'((1 2 3)(1 3))
+)
+
+;test funcional
+(test 'fun1 (caminos_entre '1 '6 '( (1 (2 5)) (2 (1 5 3 6)) (3 (2 5)) (5 (2 1 3)) (6 (2)) ))
+	'((1 2 6)(1 5 2 6) (1 5 3 2 6))
 )
