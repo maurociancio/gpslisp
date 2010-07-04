@@ -135,6 +135,22 @@
 	)
 )
 
+;====================================================================
+;filtrado de los caminos
+;====================================================================
+
+;paths: listado de caminos ( (1 2 3) (1 3 2 4) ...))
+;target: destino
+(defun filtrar_caminos (target paths)
+	(if (null paths)
+		nil
+		(if (eq (car (last (car paths))) target)
+			(cons (car paths) (filtrar_caminos target (cdr paths)))
+			(filtrar_caminos target (cdr paths))
+		)
+	)
+)
+
 ;testing function
 ;=============================
 (defun test (name got expected)
@@ -207,3 +223,7 @@
 ;|-3-|
 (test 'expcam1 (expandir_caminos '((1 2 3) (1 3 2)) '((1 (2 3)) (2 (1 3)) (3 (1 2)))) '((1 2 3) (1 3 2)))
 (test 'find_caminos2 (find_path '1 '3 '((1 (2 3)) (2 (1 3)) (3 (1 2)))) '((1 2)(1 2 3)(1 3)(1 3 2)))
+(test 'find_caminos_filtrados
+	(filtrar_caminos '3 (find_path '1 '3 '((1 (2 3)) (2 (1 3)) (3 (1 2)))))
+	'((1 2 3)(1 3))
+)
