@@ -51,7 +51,6 @@
 		(append path (list nodo))
 	)
 )
-;trace add_nodo_a_path)
 ;path (nodo1 nodo2 nodo3 ...)
 ;adyacencias (nodox nodoy ...)
 ;crea tantos caminos como adyacencias no incluidas en el camino actual
@@ -75,7 +74,6 @@
 (defun expandir_caminos (paths adyacencias)
 	(do_expandir_caminos paths adyacencias (eliminar_nils (expandir_caminos_rep paths adyacencias)))
 )
-;trace expandir_caminos)
 
 (defun do_expandir_caminos (paths adyacencias newpaths)
 	(if (null newpaths)
@@ -83,7 +81,6 @@
 		newpaths
 	)
 )
-;trace do_expandir_caminos)
 
 ;paths = ( (1 2 3 ) (1 3 4) ....)
 ;adyacencias = ( (1 (3 4 5 )) ( 2 ( 3 4 5)))
@@ -94,10 +91,6 @@
 			(expandir_caminos (cdr paths) adyacencias))
 	)
 )
-;trace expandir_caminos_rep)
-;trace expandir_camino)
-;trace expandir_caminos)
-;trace adyacencias_de)
 
 (defun find_path (source target adyacencias)
 	(do_find_path source target adyacencias (list (list source)))
@@ -126,7 +119,18 @@
 	)
 )
 ;=============================
-(EXPANDIR_CAMINOS_REP '((1 2 3) (1 3 2)) '((1 (2 3)) (2 (1 3)) (3 (1 2))))
+;===traces===
+;(trace add_nodo_a_path)
+;(trace expandir_caminos)
+;(trace do_expandir_caminos)
+;(trace expandir_caminos_rep)
+;(trace expandir_camino)
+;(trace expandir_caminos)
+;(trace adyacencias_de)
+;(trace do_find_path)
+;(trace do_find)
+;(trace expandir_caminos)
+
 (test 'params (find_path nil nil nil) nil)
 
 ;adyacencias
@@ -135,6 +139,7 @@
 (test 'ady3 (adyacencias_de 'a '((b (a c)) (a (b c))) ) '(b c))
 
 ;(test 'expandir0 (expandir_caminos_rep '((1 3)) '((1 (2 3)) (2 (1 3)) (3 (1 2)))) '((1 3 2)))
+(EXPANDIR_CAMINOS_REP '((1 2 3) (1 3 2)) '((1 (2 3)) (2 (1 3)) (3 (1 2))))
 
 (test 'repetidos (eliminar_repetidos '((1 2 3) (1 2 3) (1 3 2) (1 3 2))) '((1 2 3)(1 3 2)))
 
@@ -175,11 +180,9 @@
 
 ;1 - 5
 (test 'find_caminos1 (find_path '1 '5 '((1 (5)) (5 (1)))) '((1 5)))
+
 ;1 - 2
 ;|-3-|
-;(;trace do_find_path)
-;(;trace do_find)
-;(;trace expandir_caminos)
 ;(test 'expcam1 (expandir_caminos '((1 2 3) (1 3 2)) '((1 (2 3)) (2 (1 3)) (3 (1 2)))) '((1 2 3) (1 3 2)))
-;(exit)
+
 ;(test 'find_caminos2 (find_path '1 '3 '((1 (2 3)) (2 (1 3)) (3 (1 2)))) '((1 2 3)(1 3 2)))
