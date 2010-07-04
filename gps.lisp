@@ -1,3 +1,9 @@
+;autor mauro ciancio
+
+;====================================================================
+;manejos gral de listas
+;====================================================================
+
 ;e elemento
 ;l lista
 ;retorna si e existe en l
@@ -31,6 +37,10 @@
 	)
 )
 
+;====================================================================
+;adyacencias
+;====================================================================
+
 ;adyacencias
 ;((nodo1 (nodo2 nodo3)) (nodo2 (nodo1) ...))
 (defun adyacencias_de (nodo adyacencias)
@@ -51,6 +61,11 @@
 		(append path (list nodo))
 	)
 )
+
+;====================================================================
+;manejo de 1 camino
+;====================================================================
+
 ;path (nodo1 nodo2 nodo3 ...)
 ;adyacencias (nodox nodoy ...)
 ;crea tantos caminos como adyacencias no incluidas en el camino actual
@@ -70,6 +85,10 @@
 (defun expandir_camino (path adyacencias)
 	(eliminar_nils (expandir_camino_rep path adyacencias))
 )
+
+;====================================================================
+;manejo de varios caminos
+;====================================================================
 
 (defun expandir_caminos (paths adyacencias)
 	(do_expandir_caminos paths adyacencias (eliminar_nils (expandir_caminos_rep paths adyacencias)))
@@ -91,6 +110,10 @@
 			(expandir_caminos (cdr paths) adyacencias))
 	)
 )
+
+;====================================================================
+;busqueda de los caminos
+;====================================================================
 
 (defun find_path (source target adyacencias)
 	(do_find_path source target adyacencias (list (list source)))
