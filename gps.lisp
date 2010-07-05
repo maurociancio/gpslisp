@@ -155,6 +155,31 @@
 	(filtrar_caminos target (find_path source adyacencias))
 )
 
+;====================================================================
+;traduccion de nodos a caminos
+;====================================================================
+
+;nodo: nodo
+;cruces: ( ( nodo (id1 id2)) (nodo2 (id2 id3)) ...)
+(defun buscar_cruce (nodo cruces)
+	(if (null cruces)
+		nil
+		(if (eq (caar cruces) nodo)
+			(cadar cruces)
+			(buscar_cruce nodo (cdr cruces))
+		)
+	)
+)
+
+;path (nodo1 nodo2 ... nodo3)
+;cruces: ( ( nodo (id1 id2)) (nodo2 (id2 id3)) ...)
+(defun traducir_a_cruces (path cruces)
+	(if (null path)
+		nil
+		(cons (buscar_cruce (car path) cruces) (traducir_a_cruces (cdr path) cruces))
+	)
+)
+
 ;testing function
 ;=============================
 (defun test (name got expected)
@@ -231,6 +256,14 @@
 	(filtrar_caminos '3 (find_path '1 '((1 (2 3)) (2 (1 3)) (3 (1 2)))))
 	'((1 2 3)(1 3))
 )
+
+;test traducciones
+(test 'buscar_cruce1 (buscar_cruce '1 '((1(2 3)))) '(2 3))
+(test 'buscar_cruce2 (buscar_cruce '2 '((1(2 3)))) nil)
+(test 'buscar_cruce3 (buscar_cruce '3 '((1(2 3))(3(3 4)))) '(3 4))
+
+(test 'traducir_cruces1 (traducir_a_cruces '(1 3) '( (1(2 3)) (3(3 4)) )) '((2 3)(3 4)))
+(test 'traducir_cruces2 (traducir_a_cruces '(1) '( (1(2 3)) (3(3 4)) )) '((2 3)))
 
 ;test funcional
 (test 'fun1 (caminos_entre '1 '6 '( (1 (2 5)) (2 (1 5 3 6)) (3 (2 5)) (5 (2 1 3)) (6 (2)) ))
