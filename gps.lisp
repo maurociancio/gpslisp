@@ -180,6 +180,26 @@
 	)
 )
 
+(defun buscar_calle (calle mapa)
+	(if (null mapa)
+		nil
+		(if (eq (caar mapa) calle)
+			(cadar mapa)
+			(buscar_calle calle (cdr mapa))
+		)
+	)
+)
+
+;cruces ( (calle1 calle2) (calle 2 calle 4) ...)
+;mapa ( (1 calle) (2 calle2) ...)
+(defun traducir_a_calles (cruces mapa)
+	(if (null cruces)
+		nil
+		(cons (list (buscar_calle (caar cruces) mapa) (buscar_calle (cadar cruces) mapa))
+			(traducir_a_calles (cdr cruces) mapa))
+	)
+)
+
 ;testing function
 ;=============================
 (defun test (name got expected)
@@ -264,6 +284,10 @@
 
 (test 'traducir_cruces1 (traducir_a_cruces '(1 3) '( (1(2 3)) (3(3 4)) )) '((2 3)(3 4)))
 (test 'traducir_cruces2 (traducir_a_cruces '(1) '( (1(2 3)) (3(3 4)) )) '((2 3)))
+
+(test 'traducir_calles (traducir_a_calles '((1 3)) '((1 3) (3 4))) '((3 4)))
+(test 'traducir_calles2 (traducir_a_calles '((1 2)) '((1 3) (2 4))) '((3 4)))
+(test 'traducir_calles3 (traducir_a_calles '((1 2)(1 3)) '((1 3) (2 4)(3 5))) '((3 4)(3 5)))
 
 ;test funcional
 (test 'fun1 (caminos_entre '1 '6 '( (1 (2 5)) (2 (1 5 3 6)) (3 (2 5)) (5 (2 1 3)) (6 (2)) ))
