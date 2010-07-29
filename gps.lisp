@@ -119,7 +119,7 @@
 ;intenta expandir la lista de caminos en base a las adyacencias
 ;si no hay mas posibles caminos, termina la ejecucion
 (defun do_find_path (adyacencias path)
-	(if (or (null adyacencias))
+	(if (null adyacencias)
 		nil
 		(seguir_buscando_si_hay_caminos adyacencias path (expandir_caminos path adyacencias))
 	)
