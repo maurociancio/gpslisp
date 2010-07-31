@@ -157,20 +157,15 @@
 
 ;busca la longitud del camino mas largo
 (defun long_max (caminos &optional (max nil))
-    (if (null max)
-        ;maximo es null, => es primera llamada, el maximo es el primero de la lista
-        (if (null caminos)
-            ;no hay caminos y no hay maximo, devolvemos nil
-            nil
-            ;no hay maximo pero si hay caminos, el maximo es el primero
+    (if (null caminos)
+        max
+        (if (null max)
             (long_max (cdr caminos) (length (car caminos)))
-        )
-        ;maximo no es null, si no hay mas caminos, este es el maximo
-        (if (null caminos)
-            max
-            ;hay mas caminos, comparamos
             (long_max (cdr caminos)
-                (if (> (length (car caminos)) max) (length (car caminos)) max)
+                (if (> (length (car caminos)) max)
+                    (length (car caminos))
+                     max
+                )
             )
         )
     )
