@@ -288,6 +288,27 @@
     )
 )
 
+(defun describir_camino (camino)
+    (print 'hacer)
+    (print (nth 1 (car camino)))
+    (print '(cuadras por))
+    (print (caar camino))
+    (describir_camino2 (cdr camino))
+)
+(defun describir_camino2 (camino)
+    (if (null camino)
+        nil
+        (progn
+            (print '(doblar en))
+            (print (caar camino))
+            (print '(hacer))
+            (print (nth 1 (car camino)))
+            (print '(cuadras))
+            (describir_camino2 (cdr camino))
+        )
+    )
+)
+
 
 ;testing function
 ;=============================
@@ -405,3 +426,5 @@
 (test 'fun2 (caminos_entre '1 '8 '( (1 (3 2)) (2 (1 4 8)) (3 (1 4)) (4 (3 2 6)) (5 (7 8)) (6 (4 7)) (7 (6 5)) (8 (5 2)) ))
     '((1 3 4 2 8) (1 3 4 6 7 5 8) (1 2 4 6 7 5 8) (1 2 8))
 )
+
+(describir_camino '((indep 2)(pc 10)(9julio 10)))
