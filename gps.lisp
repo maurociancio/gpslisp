@@ -343,6 +343,8 @@
 (test 'max_min (max_min '( (1) (1 2) ( 1 2 3 4) )) '(((1))((1 2 3 4))))
 (test 'max_min2 (max_min '( (1 2) )) '(((1 2))((1 2))))
 (test 'max_min3 (max_min '( (1 2) ( 1 2 3 4) )) '(((1 2))((1 2 3 4))))
+(test 'max_min4 (max_min '( (1 2) (3 4) ( 1 2 3 4) )) '(((3 4)(1 2))((1 2 3 4))))
+(test 'max_min5 (max_min '( (1 2) (3 4) ( 2 3) )) '(((2 3) (3 4) (1 2)) ((2 3) (3 4) (1 2))))
 
 ;test traducciones
 (test 'buscar_cruce1 (buscar_cruce '1 '((1(2 3)))) '(2 3))
