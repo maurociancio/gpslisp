@@ -297,7 +297,7 @@
 )
 (defun describir_camino2 (camino)
     (if (null camino)
-        nil
+        (print '(hasta arribar al punto de llegada gracias!))
         (progn
             (print '(doblar en))
             (print (caar camino))
@@ -308,7 +308,6 @@
         )
     )
 )
-
 
 ;testing function
 ;=============================
