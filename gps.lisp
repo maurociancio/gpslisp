@@ -253,6 +253,28 @@
     )
 )
 
+(defun interseccion (esq1 esq2)
+    (cond
+        ((eq (nth 0 esq1) (nth 0 esq2)) (nth 0 esq1))
+        ((eq (nth 0 esq1) (nth 1 esq2)) (nth 0 esq1))
+        ((eq (nth 1 esq1) (nth 0 esq2)) (nth 1 esq1))
+        ((eq (nth 1 esq1) (nth 1 esq2)) (nth 1 esq1))
+    )
+)
+
+(defun comprimir_recorrido (recorrido &optional (prev nil))
+    (if (null prev)
+        (if (null recorrido)
+            nil
+            (comprimir_recorrido (cdr recorrido) (car recorrido))
+        )
+        (if (null recorrido)
+            nil
+            (cons (interseccion prev (car recorrido)) (comprimir_recorrido (cdr recorrido) (car recorrido)))
+        )
+    )
+)
+
 ;testing function
 ;=============================
 (defun test (name got expected)
@@ -357,6 +379,8 @@
 (test 'traducir_calles (traducir_a_calles '((1 3)) '((1 3) (3 4))) '((3 4)))
 (test 'traducir_calles2 (traducir_a_calles '((1 2)) '((1 3) (2 4))) '((3 4)))
 (test 'traducir_calles3 (traducir_a_calles '((1 2)(1 3)) '((1 3) (2 4)(3 5))) '((3 4)(3 5)))
+
+(test 'comprimir (comprimir_recorrido '((1 2)(1 3)(1 4)(1 5)(5 2))) '(1 1 1 5))
 
 ;test funcional
 (test 'fun1 (caminos_entre '1 '6 '( (1 (2 5)) (2 (1 5 3 6)) (3 (2 5)) (5 (2 1 3)) (6 (2)) ))
