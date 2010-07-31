@@ -180,8 +180,32 @@
 )
 
 ;devuelve el camino de mayor longitud y el camino de menor longitud
-;si son el mismo devuelve solo uno de ellos
-(defun max_min (caminos)
+(defun max_min (caminos &optional (minimos nil) (maximos nil) (min nil) (max nil))
+    (if (null caminos)
+        (list minimos maximos)
+
+        (if (or (null min) (null max))
+            (max_min caminos minimos maximos (long caminos 'is_min) (long caminos 'is_max))
+            (cond
+                ;el camino actual es maximo y minimo
+                ((and (= min (length (car caminos))) (= max (length (car caminos))))
+                (max_min (cdr caminos) (cons (car caminos) minimos) (cons (car caminos) maximos) min max)
+                )
+                ;solo min
+                ((= min (length (car caminos)))
+                (max_min (cdr caminos) (cons (car caminos) minimos) maximos min max)
+                )
+                ;solo max
+                ((= max (length (car caminos)))
+                (max_min (cdr caminos) minimos (cons (car caminos) maximos) min max)
+                )
+                ;nada
+                (t
+                (max_min (cdr caminos) minimos maximos min max)
+                )
+            )
+        )
+    )
 )
 
 ;====================================================================
@@ -315,6 +339,10 @@
 (test 'long_max5 (long '( (1) (1 2) ( 1 2 3 4) ) 'is_max ) '4)
 (test 'long_min1 (long '( (1) (1 2) ( 1 2 3 4) ) 'is_min ) '1)
 (test 'long_min2 (long '( (1 2) ( 1 2 3 4) ) 'is_min ) '2)
+
+(test 'max_min (max_min '( (1) (1 2) ( 1 2 3 4) )) '(((1))((1 2 3 4))))
+(test 'max_min2 (max_min '( (1 2) )) '(((1 2))((1 2))))
+(test 'max_min3 (max_min '( (1 2) ( 1 2 3 4) )) '(((1 2))((1 2 3 4))))
 
 ;test traducciones
 (test 'buscar_cruce1 (buscar_cruce '1 '((1(2 3)))) '(2 3))
