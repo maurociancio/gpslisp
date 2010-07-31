@@ -155,14 +155,22 @@
     (filtrar_caminos target (find_path source adyacencias))
 )
 
+(defun is_max (new old)
+    (> new old)
+)
+
+(defun is_min (new old)
+    (< new old)
+)
+
 ;busca la longitud del camino mas largo
-(defun long_max (caminos &optional (max nil))
+(defun long (caminos f &optional (max nil))
     (if (null caminos)
         max
         (if (null max)
-            (long_max (cdr caminos) (length (car caminos)))
-            (long_max (cdr caminos)
-                (if (> (length (car caminos)) max)
+            (long (cdr caminos) f (length (car caminos)))
+            (long (cdr caminos) f
+                (if (funcall f (length (car caminos)) max)
                     (length (car caminos))
                      max
                 )
@@ -300,11 +308,13 @@
 
 ;test maximos-minimos
 
-(test 'long_max1 (long_max '( (1) (1)  )) '1)
-(test 'long_max2 (long_max '( (1 2)  ) '1) '2)
-(test 'long_max3 (long_max '( (1) (1 2)  )) '2)
-(test 'long_max4 (long_max '( (1 2)  )) '2)
-(test 'long_max5 (long_max '( (1) (1 2) ( 1 2 3 4) )) '4)
+(test 'long_max1 (long '( (1) (1)  ) 'is_max ) '1)
+(test 'long_max2 (long '( (1 2)  )  'is_max '1) '2)
+(test 'long_max3 (long '( (1) (1 2)  ) 'is_max ) '2)
+(test 'long_max4 (long '( (1 2)  ) 'is_max ) '2)
+(test 'long_max5 (long '( (1) (1 2) ( 1 2 3 4) ) 'is_max ) '4)
+(test 'long_min1 (long '( (1) (1 2) ( 1 2 3 4) ) 'is_min ) '1)
+(test 'long_min2 (long '( (1 2) ( 1 2 3 4) ) 'is_min ) '2)
 
 ;test traducciones
 (test 'buscar_cruce1 (buscar_cruce '1 '((1(2 3)))) '(2 3))
