@@ -8,23 +8,23 @@
 ;l lista
 ;retorna si e existe en l
 (defun contiene (e l)
-	(if (null l)
-		nil
-		(if (equal e (car l))
-			t
-			(contiene e (cdr l))
-		)
-	)
+    (if (null l)
+        nil
+        (if (equal e (car l))
+            t
+            (contiene e (cdr l))
+        )
+    )
 )
 
 (defun eliminar_repetidos (l)
-	(if (null l)
-		nil
-		(if (contiene (car l) (cdr l))
-			(eliminar_repetidos (cdr l))
-			(cons (car l) (eliminar_repetidos (cdr l)))
-		)
-	)
+    (if (null l)
+        nil
+        (if (contiene (car l) (cdr l))
+            (eliminar_repetidos (cdr l))
+            (cons (car l) (eliminar_repetidos (cdr l)))
+        )
+    )
 )
 
 ;====================================================================
@@ -34,22 +34,22 @@
 ;adyacencias
 ;((nodo1 (nodo2 nodo3)) (nodo2 (nodo1) ...))
 (defun adyacencias_de (nodo adyacencias)
-	(if (or (null nodo) (null adyacencias))
-		nil
-		(if (eq nodo (caar adyacencias))
-			(cadar adyacencias)
-			(adyacencias_de nodo (cdr adyacencias))
-		)
-	)
+    (if (or (null nodo) (null adyacencias))
+        nil
+        (if (eq nodo (caar adyacencias))
+            (cadar adyacencias)
+            (adyacencias_de nodo (cdr adyacencias))
+        )
+    )
 )
 
 ;agrega el nodo nodo al path si no existe en el camino.
 ;si existe devuelve nil
 (defun add_nodo_a_path (path nodo)
-	(if (contiene nodo path)
-		path
-		(append path (list nodo))
-	)
+    (if (contiene nodo path)
+        path
+        (append path (list nodo))
+    )
 )
 
 ;====================================================================
@@ -65,15 +65,15 @@
 ;adyacencias (2 3)
 ;devuelve ((1 2) (1 3))
 (defun expandir_camino_rep (path adyacencias)
-	(if (null adyacencias)
-		(list path)
-		(mapcar (lambda (e) (add_nodo_a_path path e)) adyacencias)
-	)
+    (if (null adyacencias)
+        (list path)
+        (mapcar (lambda (e) (add_nodo_a_path path e)) adyacencias)
+    )
 )
 
 ;idem anterior pero sacando repetidos
 (defun expandir_camino (path adyacencias)
-	(eliminar_repetidos (expandir_camino_rep path adyacencias))
+    (eliminar_repetidos (expandir_camino_rep path adyacencias))
 )
 
 ;====================================================================
@@ -81,24 +81,24 @@
 ;====================================================================
 
 (defun expandir_caminos (paths adyacencias)
-	(eliminar_repetidos (do_expandir_caminos paths adyacencias (expandir_caminos_rep paths adyacencias)))
+    (eliminar_repetidos (do_expandir_caminos paths adyacencias (expandir_caminos_rep paths adyacencias)))
 )
 
 (defun do_expandir_caminos (paths adyacencias newpaths)
-	(if (null newpaths)
-		paths
-		newpaths
-	)
+    (if (null newpaths)
+        paths
+        newpaths
+    )
 )
 
 ;paths = ( (1 2 3 ) (1 3 4) ....)
 ;adyacencias = ( (1 (3 4 5 )) ( 2 ( 3 4 5)))
 (defun expandir_caminos_rep (paths adyacencias)
-	(if (null paths)
-		nil
-		(append (expandir_camino (car paths) (adyacencias_de (car (last (car paths))) adyacencias))
-			(expandir_caminos (cdr paths) adyacencias))
-	)
+    (if (null paths)
+        nil
+        (append (expandir_camino (car paths) (adyacencias_de (car (last (car paths))) adyacencias))
+            (expandir_caminos (cdr paths) adyacencias))
+    )
 )
 
 ;====================================================================
@@ -109,7 +109,7 @@
 ;source: nodo origen
 ;adyacencias: lista de adyacencias
 (defun find_path (source adyacencias)
-	(do_find_path adyacencias (list (list source)))
+    (do_find_path adyacencias (list (list source)))
 )
 
 ;busca los caminos alcanzables desde el path
@@ -119,19 +119,19 @@
 ;intenta expandir la lista de caminos en base a las adyacencias
 ;si no hay mas posibles caminos, termina la ejecucion
 (defun do_find_path (adyacencias path)
-	(if (null adyacencias)
-		nil
-		(seguir_buscando_si_hay_caminos adyacencias path (expandir_caminos path adyacencias))
-	)
+    (if (null adyacencias)
+        nil
+        (seguir_buscando_si_hay_caminos adyacencias path (expandir_caminos path adyacencias))
+    )
 )
 
 ;sigue buscando caminos si entre path y new path son distintos
 ;new path es la expansion de los caminos segun las adyacencias actuales
 (defun seguir_buscando_si_hay_caminos (adyacencias path new_path)
-	(if (equal path new_path)
-		path
-		(do_find_path adyacencias new_path)
-	)
+    (if (equal path new_path)
+        path
+        (do_find_path adyacencias new_path)
+    )
 )
 
 ;====================================================================
@@ -141,18 +141,18 @@
 ;paths: listado de caminos ( (1 2 3) (1 3 2 4) ...))
 ;target: destino
 (defun filtrar_caminos (target paths)
-	(if (null paths)
-		nil
-		(if (eq (car (last (car paths))) target)
-			(cons (car paths) (filtrar_caminos target (cdr paths)))
-			(filtrar_caminos target (cdr paths))
-		)
-	)
+    (if (null paths)
+        nil
+        (if (eq (car (last (car paths))) target)
+            (cons (car paths) (filtrar_caminos target (cdr paths)))
+            (filtrar_caminos target (cdr paths))
+        )
+    )
 )
 
 ;busca todos los caminos entre origen y destino, en base a una lista de adyacencias
 (defun caminos_entre (source target adyacencias)
-	(filtrar_caminos target (find_path source adyacencias))
+    (filtrar_caminos target (find_path source adyacencias))
 )
 
 ;====================================================================
@@ -162,65 +162,65 @@
 ;nodo: nodo
 ;cruces: ( ( nodo (id1 id2)) (nodo2 (id2 id3)) ...)
 (defun buscar_cruce (nodo cruces)
-	(if (null cruces)
-		nil
-		(if (eq (caar cruces) nodo)
-			(cadar cruces)
-			(buscar_cruce nodo (cdr cruces))
-		)
-	)
+    (if (null cruces)
+        nil
+        (if (eq (caar cruces) nodo)
+            (cadar cruces)
+            (buscar_cruce nodo (cdr cruces))
+        )
+    )
 )
 
 ;path (nodo1 nodo2 ... nodo3)
 ;cruces: ( ( nodo (id1 id2)) (nodo2 (id2 id3)) ...)
 (defun traducir_a_cruces (path cruces)
-	(if (null path)
-		nil
-		(cons (buscar_cruce (car path) cruces) (traducir_a_cruces (cdr path) cruces))
-	)
+    (if (null path)
+        nil
+        (cons (buscar_cruce (car path) cruces) (traducir_a_cruces (cdr path) cruces))
+    )
 )
 
 (defun buscar_calle (calle mapa)
-	(if (null mapa)
-		nil
-		(if (eq (caar mapa) calle)
-			(cadar mapa)
-			(buscar_calle calle (cdr mapa))
-		)
-	)
+    (if (null mapa)
+        nil
+        (if (eq (caar mapa) calle)
+            (cadar mapa)
+            (buscar_calle calle (cdr mapa))
+        )
+    )
 )
 
 ;cruces ( (calle1 calle2) (calle 2 calle 4) ...)
 ;mapa ( (1 calle) (2 calle2) ...)
 (defun traducir_a_calles (cruces mapa)
-	(if (null cruces)
-		nil
-		(cons (list (buscar_calle (caar cruces) mapa) (buscar_calle (cadar cruces) mapa))
-			(traducir_a_calles (cdr cruces) mapa))
-	)
+    (if (null cruces)
+        nil
+        (cons (list (buscar_calle (caar cruces) mapa) (buscar_calle (cadar cruces) mapa))
+            (traducir_a_calles (cdr cruces) mapa))
+    )
 )
 
 ;testing function
 ;=============================
 (defun test (name got expected)
-	(if (equal expected got)
-		;t
-		(progn (print '==ok==) (print name))
-		(progn (print '==error==) (print name) (print 'expected) (print expected) (print 'got) (print got))
-	)
+    (if (equal expected got)
+        ;t
+        (progn (print '==ok==) (print name))
+        (progn (print '==error==) (print name) (print 'expected) (print expected) (print 'got) (print got))
+    )
 )
 ;=============================
 ;===traces===
 (defun do_trace ()
-	(trace add_nodo_a_path)
-	(trace do_expandir_caminos)
-	(trace expandir_caminos_rep)
-	(trace expandir_camino)
-	(trace expandir_caminos)
-	(trace adyacencias_de)
-	(trace do_find_path)
-	(trace seguir_buscando_si_hay_caminos)
-	(trace expandir_caminos)
+    (trace add_nodo_a_path)
+    (trace do_expandir_caminos)
+    (trace expandir_caminos_rep)
+    (trace expandir_camino)
+    (trace expandir_caminos)
+    (trace adyacencias_de)
+    (trace do_find_path)
+    (trace seguir_buscando_si_hay_caminos)
+    (trace expandir_caminos)
 )
 
 (test 'params (find_path nil nil) nil)
@@ -273,8 +273,8 @@
 (test 'expcam1 (expandir_caminos '((1 2 3) (1 3 2)) '((1 (2 3)) (2 (1 3)) (3 (1 2)))) '((1 2 3) (1 3 2)))
 (test 'find_caminos2 (find_path '1 '((1 (2 3)) (2 (1 3)) (3 (1 2)))) '((1 2)(1 2 3)(1 3)(1 3 2)))
 (test 'find_caminos_filtrados
-	(filtrar_caminos '3 (find_path '1 '((1 (2 3)) (2 (1 3)) (3 (1 2)))))
-	'((1 2 3)(1 3))
+    (filtrar_caminos '3 (find_path '1 '((1 (2 3)) (2 (1 3)) (3 (1 2)))))
+    '((1 2 3)(1 3))
 )
 
 ;test traducciones
@@ -291,8 +291,8 @@
 
 ;test funcional
 (test 'fun1 (caminos_entre '1 '6 '( (1 (2 5)) (2 (1 5 3 6)) (3 (2 5)) (5 (2 1 3)) (6 (2)) ))
-	'((1 2 6)(1 5 2 6) (1 5 3 2 6))
+    '((1 2 6)(1 5 2 6) (1 5 3 2 6))
 )
 (test 'fun2 (caminos_entre '1 '8 '( (1 (3 2)) (2 (1 4 8)) (3 (1 4)) (4 (3 2 6)) (5 (7 8)) (6 (4 7)) (7 (6 5)) (8 (5 2)) ))
-	'((1 3 4 2 8) (1 3 4 6 7 5 8) (1 2 4 6 7 5 8) (1 2 8))
+    '((1 3 4 2 8) (1 3 4 6 7 5 8) (1 2 4 6 7 5 8) (1 2 8))
 )
