@@ -263,13 +263,10 @@
 )
 
 (defun comprimir_recorrido (recorrido &optional (prev nil))
-    (if (null prev)
-        (if (null recorrido)
-            nil
+    (if (null recorrido)
+        nil
+        (if (null prev)
             (comprimir_recorrido (cdr recorrido) (car recorrido))
-        )
-        (if (null recorrido)
-            nil
             (cons (interseccion prev (car recorrido)) (comprimir_recorrido (cdr recorrido) (car recorrido)))
         )
     )
