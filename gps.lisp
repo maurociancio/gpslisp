@@ -272,6 +272,23 @@
     )
 )
 
+(defun juntar_iguales (recorrido &optional (actual nil) (cant nil))
+    (if (or (null actual) (null cant))
+        (if (null recorrido)
+            nil
+            (juntar_iguales (cdr recorrido) (car recorrido) 1)
+        )
+        (if (null recorrido)
+            (list (list actual cant))
+            (if (eq (car recorrido) actual)
+                (juntar_iguales (cdr recorrido) actual (+ cant 1))
+                (cons (list actual cant) (juntar_iguales (cdr recorrido) (car recorrido) 1))
+            )
+        )
+    )
+)
+
+
 ;testing function
 ;=============================
 (defun test (name got expected)
@@ -378,6 +395,8 @@
 (test 'traducir_calles3 (traducir_a_calles '((1 2)(1 3)) '((1 3) (2 4)(3 5))) '((3 4)(3 5)))
 
 (test 'comprimir (comprimir_recorrido '((1 2)(1 3)(1 4)(1 5)(5 2))) '(1 1 1 5))
+(test 'juntar (juntar_iguales '(1 1 2 3)) '((1 2) (2 1) (3 1)))
+(test 'juntar2 (juntar_iguales '(1 1 2 3 3)) '((1 2) (2 1) (3 2)))
 
 ;test funcional
 (test 'fun1 (caminos_entre '1 '6 '( (1 (2 5)) (2 (1 5 3 6)) (3 (2 5)) (5 (2 1 3)) (6 (2)) ))
