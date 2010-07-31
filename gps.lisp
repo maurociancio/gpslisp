@@ -155,6 +155,32 @@
     (filtrar_caminos target (find_path source adyacencias))
 )
 
+;busca la longitud del camino mas largo
+(defun long_max (caminos &optional (max nil))
+    (if (null max)
+        ;maximo es null, => es primera llamada, el maximo es el primero de la lista
+        (if (null caminos)
+            ;no hay caminos y no hay maximo, devolvemos nil
+            nil
+            ;no hay maximo pero si hay caminos, el maximo es el primero
+            (long_max (cdr caminos) (length (car caminos)))
+        )
+        ;maximo no es null, si no hay mas caminos, este es el maximo
+        (if (null caminos)
+            max
+            ;hay mas caminos, comparamos
+            (long_max (cdr caminos)
+                (if (> (length (car caminos)) max) (length (car caminos)) max)
+            )
+        )
+    )
+)
+
+;devuelve el camino de mayor longitud y el camino de menor longitud
+;si son el mismo devuelve solo uno de ellos
+(defun max_min (caminos)
+)
+
 ;====================================================================
 ;traduccion de nodos a caminos
 ;====================================================================
@@ -276,6 +302,14 @@
     (filtrar_caminos '3 (find_path '1 '((1 (2 3)) (2 (1 3)) (3 (1 2)))))
     '((1 2 3)(1 3))
 )
+
+;test maximos-minimos
+
+(test 'long_max1 (long_max '( (1) (1)  )) '1)
+(test 'long_max2 (long_max '( (1 2)  ) '1) '2)
+(test 'long_max3 (long_max '( (1) (1 2)  )) '2)
+(test 'long_max4 (long_max '( (1 2)  )) '2)
+(test 'long_max5 (long_max '( (1) (1 2) ( 1 2 3 4) )) '4)
 
 ;test traducciones
 (test 'buscar_cruce1 (buscar_cruce '1 '((1(2 3)))) '(2 3))
