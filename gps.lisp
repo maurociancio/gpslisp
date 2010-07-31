@@ -255,10 +255,10 @@
 
 (defun interseccion (esq1 esq2)
     (cond
-        ((eq (nth 0 esq1) (nth 0 esq2)) (nth 0 esq1))
-        ((eq (nth 0 esq1) (nth 1 esq2)) (nth 0 esq1))
-        ((eq (nth 1 esq1) (nth 0 esq2)) (nth 1 esq1))
-        ((eq (nth 1 esq1) (nth 1 esq2)) (nth 1 esq1))
+        ((equal (nth 0 esq1) (nth 0 esq2)) (nth 0 esq1))
+        ((equal (nth 0 esq1) (nth 1 esq2)) (nth 0 esq1))
+        ((equal (nth 1 esq1) (nth 0 esq2)) (nth 1 esq1))
+        ((equal (nth 1 esq1) (nth 1 esq2)) (nth 1 esq1))
     )
 )
 
@@ -426,4 +426,24 @@
     '((1 3 4 2 8) (1 3 4 6 7 5 8) (1 2 4 6 7 5 8) (1 2 8))
 )
 
-(describir_camino '((indep 2)(pc 10)(9julio 10)))
+;(describir_camino '((indep 2)(pc 10)(9julio 10)))
+
+(setq nodos
+        '((a (b f)) (b (a c)) (c (b d)) (d (c e j)) (e (d)) (f(g))
+          (g(h)) (h (b i)) (i(c j)) (j(k)) (k(l)) (l(e)))
+)
+
+(setq esquinas
+        '((a(1 2)) (b(1 5)) (c(1 7)) (d(1 6)) (e(1 9)) (f(4 2))
+          (g(2 8)) (h(8 5)) (i(8 7)) (j(8 6)) (k(8 9)) (l(9 4)))
+)
+
+(setq calles
+        '((1 (Paseo Colon))(2 Independencia)(3 EEUU)(4 Balcarce)(5 Chile)
+          (6 Venezuela)(7 Mexico)(8 Defensa)(9 Belgrano))
+)
+
+;con el caar obtengo el primer camino minimo, puede haber varios minimos
+(print (describir_camino (juntar_iguales (comprimir_recorrido (traducir_a_calles (traducir_a_cruces (caar (max_min
+        (caminos_entre 'k 'i  nodos)
+)) esquinas) calles)))))
